@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { addEmployee } from "../store/employeeSlice"
+import { states } from "../data/states"
+import { departments } from '../data/departments'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -14,7 +16,7 @@ const AddEmployeesPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const savedEmployees = useSelector((state) => state?.employee.employees);
+  const savedEmployees = useSelector((state) => state?.employees.employee);
 
   useEffect(() => {
     console.log(savedEmployees)
@@ -64,8 +66,6 @@ const AddEmployeesPage = () => {
     setShowModal(false);
     navigate("/employees-list");
   }
-
-  const departmentOptions = ["Sales", "Marketing", "Engineering", "Human Resources", "Legal"]
 
   return ( 
       <Container fluid className="my-4">
@@ -149,7 +149,7 @@ const AddEmployeesPage = () => {
                     value={employee.street}
                     onChange={handleFormInput}
                     isInvalid={validated && !employee.street}
-      
+                    required
                   />
                   <Form.Control.Feedback type="invalid">
                     Please provide a street.
@@ -175,11 +175,15 @@ const AddEmployeesPage = () => {
                     name="state"
                     value={employee.state}
                     onChange={handleFormInput}
-                  
                     isInvalid={validated && !employee.state}
+                    required
                   >
                     <option value="">Select State</option>
-                    {/* Add state options here */}
+                    {states.map((state) => (
+                      <option key={state.abbreviation} value={state.abbreviation}>
+                        {state.name}
+                      </option>
+                    ))}
                   </Form.Select>
                   <Form.Control.Feedback type="invalid">
                     Please select a state.
@@ -210,7 +214,7 @@ const AddEmployeesPage = () => {
                   required
                 >
                   <option value="">Select Department</option>
-                  {departmentOptions.map((dept) => (
+                  {departments.map((dept) => (
                     <option key={dept} value={dept}>
                       {dept}
                     </option>
