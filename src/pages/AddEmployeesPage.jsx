@@ -12,6 +12,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
+
 const AddEmployeesPage = () => {
 
   const navigate = useNavigate();
@@ -22,15 +23,27 @@ const AddEmployeesPage = () => {
     console.log(savedEmployees)
   }, [savedEmployees])
 
-  const [employee, setEmployee] = useState({
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    startDate: "",
-    street: "",
-    city: "",
+  // const [employee, setEmployee] = useState({
+  //   firstName: "",
+  //   lastName: "",
+  //   dateOfBirth: "",
+  //   startDate: "",
+  //   street: "",
+  //   city: "",
+  //   state: "",
+  //   zipCode: "",
+  //   department: ""
+  // })
+
+    const [employee, setEmployee] = useState({
+    firstName: "Mark",
+    lastName: "Corrigan",
+    dateOfBirth: "12/12/1975",
+    startDate: "12/09/2004",
+    street: "Burke St",
+    city: "London",
     state: "",
-    zipCode: "",
+    zipCode: "90009",
     department: ""
   })
 
