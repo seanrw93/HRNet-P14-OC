@@ -53,10 +53,10 @@ const AddEmployeesPage = () => {
 
   const handleFormInput = (e) => {
     const { name, value } = e.target;
-    setEmployee({
-      ...employee,
+    setEmployee(prev => ({
+      ...prev,
       [name]: value
-    });
+    }));
   }
 
   const handleSubmit = (e) => {
