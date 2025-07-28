@@ -1,12 +1,11 @@
 import { useState, useEffect, useMemo, useCallback, Suspense, lazy } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router';
-import { reformatCamelCase } from '../utils/reformatCamelCase';
 import { updateEmployee, deleteEmployee } from '../store/employeeSlice';
 import { states } from "../data/states"
 import { departments } from '../data/departments'
 
-import EmployeeDataTableRow from '../components/EmployeeDataTableRow';
+import EmployeeTable from '../components/EmployeeTable';
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -27,7 +26,7 @@ const EmployeesListPage = () => {
   const [editValues, setEditValues] = useState({});
   const [error, setError] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [entriesToShow, setEntriesToShow] = useState("10");
+  const [entriesToShow, setEntriesToShow] = useState(savedEmployees.length  || "10");
 
   // Save employee data to localStorage whenever it changes
   // Simulate API call to patch endpoint
@@ -105,8 +104,17 @@ const EmployeesListPage = () => {
       Object.values(employee).some(value =>
         String(value).toLowerCase().startsWith(searchQuery.toLowerCase())
       )
-    ),
-    [savedEmployees, searchQuery]
+    ).slice(0, Number(entriesToShow))
+  , [savedEmployees, searchQuery, entriesToShow]
+  );
+
+  const totalFilteredEmployees = useMemo(() =>
+    savedEmployees.filter(employee =>
+      Object.values(employee).some(value =>
+        String(value).toLowerCase().startsWith(searchQuery.toLowerCase())
+      )
+    )
+  , [savedEmployees, searchQuery, entriesToShow]
   );
 
   const statesOptions = states.map(state => (
@@ -127,8 +135,17 @@ const EmployeesListPage = () => {
           <Row className="mb-3 justify-content-between align-items-center">
             <Col xs="auto">
               <Form.Select
+                name="entriesToShow"
                 value={entriesToShow}
+                onChange={e => setEntriesToShow(e.target.value)}
+                aria-label="Entries to show"
+                disabled={savedEmployees.length === 0}
               >
+                <option value="3">Show 3 entries</option>
+                <option value="25">Show 25 entries</option>
+                <option value="50">Show 50 entries</option>
+                <option value="100">Show 100 entries</option>
+                <option value={savedEmployees.length}>Show ALL entries</option>
               </Form.Select>
             </Col>
             <Col md="auto">
@@ -144,37 +161,22 @@ const EmployeesListPage = () => {
           </Row>
           {filteredEmployees.length > 0 ? (
               <Suspense fallback={<Loader />}>
-                <Table class="h-100" id="employee-table" responsive bordered striped>
-                  <thead>
-                    <tr>
-                      {keys.map((key) => (
-                        key !== "id" && <th key={key}>{reformatCamelCase(key)}</th>
-                      ))}
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredEmployees.map((employee) => (
-                      <EmployeeDataTableRow
-                        key={employee.id}
-                        employee={employee}
-                        editId={editId}
-                        keys={keys}
-                        editValues={editValues}
-                        handleEditChange={handleEditChange}
-                        error={error}
-                        departmentsOptions={departmentsOptions}
-                        statesOptions={statesOptions}
-                        handleEditSave={handleEditSave}
-                        setEditId={setEditId}
-                        enterEditMode={enterEditMode}
-                        handleDelete={handleDelete}
-                      />
-                    ))}
-                  </tbody>
-                </Table>
+                <EmployeeTable
+                  keys={keys}
+                  filteredEmployees={filteredEmployees}
+                  editId={editId}
+                  editValues={editValues}
+                  handleEditChange={handleEditChange}
+                  error={error}
+                  departmentsOptions={departmentsOptions}
+                  statesOptions={statesOptions}
+                  handleEditSave={handleEditSave}
+                  setEditId={setEditId}
+                  enterEditMode={enterEditMode}
+                  handleDelete={handleDelete}
+                />
                 <p className="text-left">
-                  Showing 1 to {filteredEmployees.length} of {filteredEmployees.length} entries
+                  Showing {totalFilteredEmployees.length === 0 ? 0 : 1} to {filteredEmployees.length} of {savedEmployees.length} entries
                 </p>
               </Suspense>
             ) : (

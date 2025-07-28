@@ -15,6 +15,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
+import SelectInput from "../components/SelectInput";
 
 const AddEmployeesPage = () => {
   const navigate = useNavigate();
@@ -205,26 +206,19 @@ const AddEmployeesPage = () => {
                   Please provide a city.
                 </Form.Control.Feedback>
               </Form.Group>
-              <Form.Group className="mb-2" controlId="formGroupState">
-                <Form.Label>State</Form.Label>
-                <Form.Select
-                  name="state"
-                  value={employee.state}
-                  onChange={handleFormInput}
-                  isInvalid={validated && !employee.state}
-                  required
-                >
-                  <option value="">Select State</option>
-                  {states.map((state) => (
-                    <option key={state.abbreviation} value={state.abbreviation}>
-                      {state.name}
-                    </option>
-                  ))}
-                </Form.Select>
-                <Form.Control.Feedback type="invalid">
-                  Please select a state.
-                </Form.Control.Feedback>
-              </Form.Group>
+              <SelectInput
+                label="State"
+                name="state"
+                value={employee.state}
+                onChange={handleFormInput}
+                options={states.map((state) => ({
+                  value: state.abbreviation,
+                  label: state.name,
+                }))}
+                isInvalid={validated && !employee.state}
+                required
+                feedback="Please select a state."
+              />
               <Form.Group className="mb-2" controlId="formGroupZip">
                 <Form.Label>Zip Code</Form.Label>
                 <Form.Control
@@ -240,26 +234,16 @@ const AddEmployeesPage = () => {
                 </Form.Control.Feedback>
               </Form.Group>
             </fieldset>
-            <Form.Group className="mb-3" controlId="formGroupDepartment">
-              <Form.Label>Department</Form.Label>
-              <Form.Select
-                name="department"
-                value={employee.department}
-                onChange={handleFormInput}
-                isInvalid={validated && !employee.department}
-                required
-              >
-                <option value="">Select Department</option>
-                {departments.map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept}
-                  </option>
-                ))}
-              </Form.Select>
-              <Form.Control.Feedback type="invalid">
-                Please select a department.
-              </Form.Control.Feedback>
-            </Form.Group>
+            <SelectInput
+              label="Department"
+              name="department"
+              value={employee.department}
+              onChange={handleFormInput}
+              options={departments}
+              isInvalid={validated && !employee.department}
+              required
+              feedback="Please select a department."
+            />
             <Button type="submit" variant="primary" className="w-100 mt-3">
               Save
             </Button>
