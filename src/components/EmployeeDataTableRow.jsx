@@ -1,7 +1,10 @@
 import { memo } from 'react';
 
+import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
+
+import { reformatCamelCase } from '../utils/reformatCamelCase';
 
 const EmployeeDataTableRow = ({ 
     employee, 
@@ -14,34 +17,66 @@ const EmployeeDataTableRow = ({
     statesOptions, 
     handleEditSave, 
     setEditId, 
-    editMode, 
+    enterEditMode, 
     handleDelete }) => {
+
+  const formInputType = (key) => {
+    if (key === "id") {
+      return null;
+    }
+
+    if (key === "department" || key === "state") {
+      return (
+        <td key={key}>
+          <Form.Select
+            name={key}
+            value={editValues[key] || ""}
+            onChange={handleEditChange}
+          >
+            {key === "department" ? departmentsOptions : statesOptions}
+          </Form.Select>
+        </td>
+      );
+    }
+
+    if (key === "dateOfBirth" || key === "startDate") {
+      return (
+        <td key={key}>
+          <Form.Control
+            type="text"
+            name={key}
+            value={editValues[key] || ""}
+            onChange={handleEditChange}
+            isInvalid={error.includes(key)}
+            />
+            <Form.Control.Feedback type="invalid">
+                Please provide a valid date in YYYY-MM-DD format before {new Date().toISOString().slice(0, 10)}.
+            </Form.Control.Feedback>
+        </td>
+      );
+    }
+
+    return (
+      <td key={key}>
+        <Form.Control
+          type={key === "zipCode" ? "number" : "text"}
+          name={key}
+          value={editValues[key] || ""}
+          onChange={handleEditChange}
+          isInvalid={error.includes(key)}
+        />
+        <Form.Control.Feedback type="invalid">
+          Please provide a {reformatCamelCase(key).toLowerCase()}.
+        </Form.Control.Feedback>
+      </td>
+    );
+  };
 
     return (
       editId === employee.id ? (
         <tr key={employee.id} id={employee.id}>
           {keys.map((key) =>
-            key !== "id" ? (
-              <td key={key}>
-                {key === "department" || key === "state" ? (
-                  <Form.Select
-                    name={key}
-                    value={editValues[key] || ""}
-                    onChange={handleEditChange}  
-                  >
-                    {key === "department" ? departmentsOptions : statesOptions}
-                  </Form.Select>
-                ) : (
-                  <Form.Control
-                    type={key === "zipCode" ? "number" : "text"}
-                    name={key}
-                    value={editValues[key] || ""}
-                    onChange={handleEditChange}
-                    isInvalid={error.includes(key)}
-                  />
-                )}
-              </td>
-            ) : null
+            formInputType(key)
           )}
           <td className="text-center">
             <ButtonGroup>
@@ -57,7 +92,7 @@ const EmployeeDataTableRow = ({
           ))}
           <td className="text-center">
             <ButtonGroup>
-              <Button type="button" variant="primary" onClick={() => editMode(employee)}>Edit</Button>
+              <Button type="button" variant="primary" onClick={() => enterEditMode(employee)}>Edit</Button>
               <Button type="button" variant="danger" onClick={() => handleDelete(employee.id)}>Delete</Button>
             </ButtonGroup>
           </td>

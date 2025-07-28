@@ -29,34 +29,50 @@ const EmployeesListPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [entriesToShow, setEntriesToShow] = useState("10");
 
-  const invalidFields = [];
-
-
+  // Save employee data to localStorage whenever it changes
+  // Simulate API call to patch endpoint
+  // To update when backend is implemented
   useEffect(() => {
     localStorage.setItem("employeeList", JSON.stringify(savedEmployees));
   }, [savedEmployees]);
 
 
-  const editMode = useCallback((element) => {
+  const enterEditMode = useCallback((element) => {
+    setError([]);
     setEditId(element.id);
     setEditValues(element);
   }, []);
 
-  const handleEditSave = useCallback(() => {
+  const handleEditValidation = () => {
+    const invalidFields = [];
     for (const key in editValues) {
-      if (editValues[key].trim() === "" || editValues[key] === null) {
-        invalidFields.push(key);
-      }
-    };
 
+    const invalidValues = [
+      editValues[key].trim() === "",
+      editValues[key] === null,
+      (key === "startDate" || key === "dateOfBirth") && (
+        !editValues[key] ||
+        isNaN(Date.parse(editValues[key])) ||
+        !editValues[key].match(/^\d{4}-\d{2}-\d{2}$/) ||
+        new Date(editValues[key]) > new Date()
+      )
+    ];
+
+    if (invalidValues.some(Boolean)) {
+      invalidFields.push(key);
+    }
+  }
+  return invalidFields;
+}
+
+  const handleEditSave = useCallback(() => {
+    const invalidFields = handleEditValidation();
     if (invalidFields.length > 0) {
       setError(invalidFields);
-      console.log(error);
+      console.error("Invalid fields:", invalidFields);
       return;
     };
-
-    setError([])
-
+    setError([]);
     if (window.confirm("Update employee details?")) {
       dispatch(updateEmployee(editValues));
       setEditId(null);
@@ -87,7 +103,7 @@ const EmployeesListPage = () => {
   const filteredEmployees = useMemo(() =>
     savedEmployees.filter(employee =>
       Object.values(employee).some(value =>
-        String(value).toLowerCase().includes(searchQuery.toLowerCase())
+        String(value).toLowerCase().startsWith(searchQuery.toLowerCase())
       )
     ),
     [savedEmployees, searchQuery]
@@ -108,17 +124,16 @@ const EmployeesListPage = () => {
           <div className="title mb-4 text-center">
               <h1>View Current Employees</h1>
           </div>
-          <Row className="mb-3">
+          <Row className="mb-3 justify-content-between align-items-center">
             <Col xs="auto">
               <Form.Select
                 value={entriesToShow}
               >
               </Form.Select>
             </Col>
-            <Col>
+            <Col md="auto">
               <Form.Control
                 type="text"
-                className="max-w-300"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
@@ -129,7 +144,7 @@ const EmployeesListPage = () => {
           </Row>
           {filteredEmployees.length > 0 ? (
               <Suspense fallback={<Loader />}>
-                <Table id="employee-table" responsive bordered striped>
+                <Table class="h-100" id="employee-table" responsive bordered striped>
                   <thead>
                     <tr>
                       {keys.map((key) => (
@@ -152,7 +167,7 @@ const EmployeesListPage = () => {
                         statesOptions={statesOptions}
                         handleEditSave={handleEditSave}
                         setEditId={setEditId}
-                        editMode={editMode}
+                        enterEditMode={enterEditMode}
                         handleDelete={handleDelete}
                       />
                     ))}

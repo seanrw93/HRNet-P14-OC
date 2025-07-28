@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addEmployee } from "../store/employeeSlice";
 import { states } from "../data/states";
 import { departments } from "../data/departments";
+import { convertToISO } from "../utils/convertToIso";
 
 import DatePicker from "react-i18n-datepicker";
 import "react-i18n-datepicker/dist/react-i18n-datepicker.css";
@@ -20,6 +21,7 @@ const AddEmployeesPage = () => {
   const dispatch = useDispatch();
   const savedEmployees = useSelector((state) => state?.employees.employee);
 
+  // Simulate API call to fetch employees
   useEffect(() => {
     console.log(savedEmployees);
   }, [savedEmployees]);
@@ -40,13 +42,13 @@ const AddEmployeesPage = () => {
   const [employee, setEmployee] = useState({
     firstName: "Mark",
     lastName: "Corrigan",
+    dateOfBirth: "",
+    startDate: "",
     street: "Burke St",
     city: "London",
     state: "",
     zipCode: "90009",
     department: "",
-    dateOfBirth: "",
-    startDate: "",
   });
 
   const [validated, setValidated] = useState(false);
@@ -68,12 +70,18 @@ const AddEmployeesPage = () => {
       e.stopPropagation();
     } else {
       setShowModal(true);
-      dispatch(addEmployee(employee));
-      // Save to local storage
-      const currentList =
-        JSON.parse(localStorage.getItem("employeeList")) || [];
-      currentList.push(employee);
+
+      const addEmployeeData = {
+        ...employee,
+        dateOfBirth: convertToISO(employee.dateOfBirth),
+        startDate: convertToISO(employee.startDate),
+      };
+      dispatch(addEmployee(addEmployeeData));
+      // Save to local storage (in place of API call until backend is implemented)
+      const currentList = JSON.parse(localStorage.getItem("employeeList")) || [];
+      currentList.push(addEmployeeData);
       localStorage.setItem("employeeList", JSON.stringify(currentList));
+      console.log("Employee added:", employee);
     }
     setValidated(true);
   };
@@ -142,7 +150,7 @@ const AddEmployeesPage = () => {
                 minDate={new Date(1920, 0, 1)}
                 minYear={1920}
                 maxYear={2025}
-                locale="en-GB"
+                locale="en"
               />
               <Form.Control.Feedback type="invalid">
                 Please provide a date of birth.
@@ -161,7 +169,7 @@ const AddEmployeesPage = () => {
                 minDate={new Date(1920, 0, 1)}
                 minYear={1920}
                 maxYear={2025}
-                locale="en-GB"
+                locale="en"
               />
               <Form.Control.Feedback type="invalid">
                 Please provide a start date.
