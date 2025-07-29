@@ -2,10 +2,12 @@ import { memo } from "react";
 import Table from "react-bootstrap/Table";
 import EmployeeDataTableRow from "./EmployeeDataTableRow";
 import { reformatCamelCase } from "../utils/reformatCamelCase";
+import SortButtons from "./SortButtons";
 
 const EmployeeTable = ({
   keys,
   filteredEmployees,
+  setFilteredEmployees,
   editId,
   editValues,
   handleEditChange,
@@ -21,7 +23,19 @@ const EmployeeTable = ({
     <thead>
       <tr>
         {keys.map(
-          (key) => key !== "id" && <th key={key}>{reformatCamelCase(key)}</th>
+          (key) =>
+            key !== "id" && (
+              <th key={key} className="employee-table-header">
+                {reformatCamelCase(key)}
+                <span>
+                  <SortButtons
+                    field={key}
+                    filteredEmployees={filteredEmployees}
+                    setFilteredEmployees={setFilteredEmployees}
+                  />
+                </span>
+              </th>
+            )
         )}
         <th></th>
       </tr>
