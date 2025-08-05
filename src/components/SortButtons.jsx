@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { FaSortUp } from "react-icons/fa";
 import { FaSortDown } from "react-icons/fa";
@@ -7,8 +7,9 @@ const SortButtons = ({ field, filteredEmployees, setFilteredEmployees }) => {
   
 const [activeDirection, setActiveDirection] = useState(null);
   
-const handleSort = (e, direction) => {
+const handleSort = useCallback((e, direction) => {
     e.stopPropagation();
+    //Disable button if already clicked
     if (activeDirection === direction) return; 
     const sorted = [...filteredEmployees].sort((a, b) => {
       if (direction === "asc") {
@@ -21,7 +22,7 @@ const handleSort = (e, direction) => {
     });
     setFilteredEmployees(sorted);
     setActiveDirection(direction);
-  };
+  }, [activeDirection, field, filteredEmployees, setFilteredEmployees]);
 
   const handleSortAsc = (e) => handleSort(e, "asc");
   const handleSortDesc = (e) => handleSort(e, "desc");

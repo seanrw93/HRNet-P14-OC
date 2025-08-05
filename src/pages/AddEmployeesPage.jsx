@@ -27,33 +27,18 @@ const AddEmployeesPage = () => {
     console.log(savedEmployees);
   }, [savedEmployees]);
 
-  // const [employee, setEmployee] = useState({
-  //   firstName: "",
-  //   lastName: "",
-  //   dateOfBirth: "",
-  //   startDate: "",
-  //   street: "",
-  //   city: "",
-  //   state: "",
-  //   zipCode: "",
-  //   department: ""
-  //   //dateOfBirth and startDate will be set by DatePicker (uncontrolled component)
-  // })
-
   const [employee, setEmployee] = useState({
-    firstName: "Mark",
-    lastName: "Corrigan",
+    firstName: "",
+    lastName: "",
     dateOfBirth: "",
     startDate: "",
-    street: "Burke St",
-    city: "London",
+    street: "",
+    city: "",
     state: "",
-    zipCode: "90009",
-    department: "",
-  });
-
+    zipCode: "",
+    department: ""
+  })
   const [validated, setValidated] = useState(false);
-
   const [showModal, setShowModal] = useState(false);
 
   const handleFormInput = (e) => {
