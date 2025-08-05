@@ -18,6 +18,13 @@ label {
 .employee-table-header {
     position: relative;
     padding-right: 2em !important;
+    text-wrap: nowrap;
+}
+
+tbody td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .sort-wrapper {
@@ -28,7 +35,7 @@ label {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .sort-button {
@@ -54,4 +61,11 @@ label {
     height: 1em;
     line-height: 1;
 }
+
+.sort-button:hover {
+    path {
+        fill: #0d6efd;
+    }
+};
+
 

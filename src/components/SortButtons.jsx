@@ -5,16 +5,18 @@ import { FaSortDown } from "react-icons/fa";
 
 const SortButtons = ({ field, filteredEmployees, setFilteredEmployees }) => {
   
-  const [activeDirection, setActiveDirection] = useState(null);
+const [activeDirection, setActiveDirection] = useState(null);
   
 const handleSort = (e, direction) => {
     e.stopPropagation();
     if (activeDirection === direction) return; 
     const sorted = [...filteredEmployees].sort((a, b) => {
       if (direction === "asc") {
+        return a[field] < b[field] ? 1 : -1;
+      } else if (direction === "desc") {
         return a[field] > b[field] ? 1 : -1;
       } else {
-        return a[field] < b[field] ? 1 : -1;
+        throw new Error("Invalid sort direction");
       }
     });
     setFilteredEmployees(sorted);
@@ -23,6 +25,8 @@ const handleSort = (e, direction) => {
 
   const handleSortAsc = (e) => handleSort(e, "asc");
   const handleSortDesc = (e) => handleSort(e, "desc");
+
+
 
   return (
     <div className="sort-wrapper">
