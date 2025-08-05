@@ -20,12 +20,6 @@ import SelectInput from "../components/SelectInput";
 const AddEmployeesPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const savedEmployees = useSelector((state) => state?.employees.employee);
-
-  // Simulate API call to fetch employees
-  useEffect(() => {
-    console.log(savedEmployees);
-  }, [savedEmployees]);
 
   const [employee, setEmployee] = useState({
     firstName: "",
@@ -40,6 +34,7 @@ const AddEmployeesPage = () => {
   })
   const [validated, setValidated] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFormInput = (e) => {
     const { name, value } = e.target;
@@ -55,6 +50,7 @@ const AddEmployeesPage = () => {
     if (form.checkValidity() === false) {
       e.stopPropagation();
     } else {
+      setIsSubmitting(true);
       setShowModal(true);
 
       const addEmployeeData = {
@@ -229,7 +225,12 @@ const AddEmployeesPage = () => {
               required
               feedback="Please select a department."
             />
-            <Button type="submit" variant="primary" className="w-100 mt-3">
+            <Button 
+              type="submit" 
+              variant="primary" 
+              className="w-100 mt-3"
+              disabled={isSubmitting}
+            >
               Save
             </Button>
           </Form>

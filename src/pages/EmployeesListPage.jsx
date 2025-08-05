@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  Suspense,
-  lazy,
-} from "react";
+import { useState, useEffect, useMemo, useCallback, Suspense, lazy } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router";
 import { updateEmployee, deleteEmployee } from "../store/employeeSlice";
@@ -34,6 +27,11 @@ const EmployeesListPage = () => {
     savedEmployees.length || "10"
   );
   const [filteredEmployees, setFilteredEmployees] = useState([]);
+
+  // Simulate API GET call to fetch employees
+  useEffect(() => {
+    console.log(savedEmployees);
+  }, [savedEmployees]);
 
   // Save employee data to localStorage whenever it changes
   // Simulate API call to patch endpoint
