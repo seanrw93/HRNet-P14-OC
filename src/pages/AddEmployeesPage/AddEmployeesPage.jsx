@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { addEmployee } from "../store/employeeSlice";
-import { states } from "../data/states";
-import { departments } from "../data/departments";
-import { convertToISO } from "../utils/convertToIso";
+import { useDispatch } from "react-redux";
+import { addEmployee } from "../../store/employeeSlice";
+import { states } from "../../data/states";
+import { departments } from "../../data/departments";
+import { convertToISO } from "../../utils/convertToIso";
 
 import DatePicker from "react-i18n-datepicker";
 import "react-i18n-datepicker/dist/react-i18n-datepicker.css";
@@ -15,7 +15,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import SelectInput from "../components/SelectInput";
+import SelectInput from "../../components/SelectInput";
 
 const AddEmployeesPage = () => {
   const navigate = useNavigate();
@@ -130,11 +130,13 @@ const AddEmployeesPage = () => {
                 isRequired={true}
                 maxDate={new Date()}
                 minDate={new Date(1920, 0, 1)}
-                minYear={1920}
-                maxYear={2025}
                 locale="en"
+                aria={{
+                  label: "Date of Birth",
+                  describedBy: "formGroupDOBHelp",
+                }}
               />
-              <Form.Control.Feedback type="invalid">
+              <Form.Control.Feedback type="invalid" id="formGroupDOBHelp">
                 Please provide a date of birth.
               </Form.Control.Feedback>
             </Form.Group>
@@ -149,11 +151,13 @@ const AddEmployeesPage = () => {
                 isRequired={true}
                 maxDate={new Date()}
                 minDate={new Date(1920, 0, 1)}
-                minYear={1920}
-                maxYear={2025}
                 locale="en"
+                aria={{
+                  label: "Start Date",
+                  describedBy: "formGroupStartDateHelp",
+                }}
               />
-              <Form.Control.Feedback type="invalid">
+              <Form.Control.Feedback type="invalid" id="formGroupStartDateHelp">
                 Please provide a start date.
               </Form.Control.Feedback>
             </Form.Group>

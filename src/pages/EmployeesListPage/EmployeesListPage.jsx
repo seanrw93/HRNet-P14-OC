@@ -1,18 +1,18 @@
 import { useState, useEffect, useMemo, useCallback, Suspense, lazy } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router";
-import { updateEmployee, deleteEmployee } from "../store/employeeSlice";
-import { states } from "../data/states";
-import { departments } from "../data/departments";
+import { updateEmployee, deleteEmployee } from "../../store/employeeSlice";
+import { states } from "../../data/states";
+import { departments } from "../../data/departments";
 
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import Loader from "../components/Loader";
+import Loader from "../../components/Loader";
 
-const EmployeeTable = lazy(() => import("../components/EmployeeTable"));
+const EmployeeTable = lazy(() => import("../../components/EmployeeTable"));
 
 const EmployeesListPage = () => {
   const dispatch = useDispatch();
@@ -105,19 +105,6 @@ const EmployeesListPage = () => {
     [dispatch]
   );
 
-  useEffect(() => {
-    const filtered = savedEmployees
-      .filter((employee) =>
-        Object.values(employee).some((value) =>
-          String(value).toLowerCase().startsWith(searchQuery.toLowerCase())
-        )
-      )
-      .slice(0, Number(entriesToShow));
-    setFilteredEmployees(filtered);
-  }, [savedEmployees, searchQuery, entriesToShow]);
-
-  // Memoized filtered employees based on search query
-  // This will only recompute when savedEmployees or searchQuery changes
   useEffect(() => {
     const filtered = savedEmployees
       .filter((employee) =>

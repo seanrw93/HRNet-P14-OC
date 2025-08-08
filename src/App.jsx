@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
-import AddEmployeesPage from './pages/AddEmployeesPage'
-import EmployeesListPage from './pages/EmployeesListPage'
-import NotFound from './pages/NotFound'
+import AddEmployeesPage from './pages/AddEmployeesPage/AddEmployeesPage'
+import EmployeesListPage from './pages/EmployeesListPage/EmployeesListPage'
+import NotFound from './pages/NotFound/NotFound'
 
 function App() {
   return (
