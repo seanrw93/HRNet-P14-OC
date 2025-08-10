@@ -146,7 +146,7 @@ const EmployeesListPage = () => {
             <h1>View Current Employees</h1>
           </div>
           <Row className="mb-3 justify-content-between align-items-center">
-            <Col xs="auto">
+            <Col xs="auto" className="mb-2">
               <Form.Select
                 name="entriesToShow"
                 value={entriesToShow}
@@ -161,8 +161,9 @@ const EmployeesListPage = () => {
                 <option value={savedEmployees.length}>Show ALL entries</option>
               </Form.Select>
             </Col>
-            <Col md="auto">
+            <Col md="auto" className="mb-2">
               <Form.Control
+                name="searchQuery"
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}
