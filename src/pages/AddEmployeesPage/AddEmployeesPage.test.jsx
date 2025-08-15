@@ -1,8 +1,8 @@
-import { render, screen, waitFor, cleanup, getByRole } from '@testing-library/react';
+import { render, screen, waitFor, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom';
 
-import { BrowserRouter, Routes, Route, MemoryRouter } from 'react-router-dom'
+import { Routes, Route, MemoryRouter } from 'react-router-dom'
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import employeeReducer from '../../store/employeeSlice';
@@ -46,8 +46,8 @@ afterEach(() => {
     cleanup();
     localStorage.clear();
 });
-
-describe("Form rendering", () => {
+describe('AddEmployeesPage', () => {
+    describe("Form rendering", () => {
     let testStore;
 
     beforeEach(() => {
@@ -95,191 +95,191 @@ describe("Form rendering", () => {
             expect(screen.getByText(dept)).toBeInTheDocument();
         });
     });
-});
-
-describe("Datepicker functionality", () => {
-    let testStore;
-
-    beforeEach(() => {
-        testStore = createTestStore();
-        renderAddEmployeesPage(testStore);
     });
 
-    it("should launch the react-i18n-datepicker plugin when clicking date fields", async () => {
-        const user = userEvent.setup();
+    describe("Datepicker functionality", () => {
+        let testStore;
 
-        // Check if date fields are present
-        const dateOfBirth = screen.getByLabelText(/Date of Birth/i);
-        const startDate = screen.getByLabelText(/Start Date/i);
+        beforeEach(() => {
+            testStore = createTestStore();
+            renderAddEmployeesPage(testStore);
+        });
 
-        // Click on date fields to open the datepicker
-        await user.click(dateOfBirth);
-        await user.click(startDate);
+        it("should launch the react-i18n-datepicker plugin when clicking date fields", async () => {
+            const user = userEvent.setup();
 
-        // Check if the datepicker is rendered
-        expect(document.querySelector("#calendar")).toBeInTheDocument();
-    });
-});
+            // Check if date fields are present
+            const dateOfBirth = screen.getByLabelText(/Date of Birth/i);
+            const startDate = screen.getByLabelText(/Start Date/i);
 
-describe("Navigate link", () => {
-    let testStore;
+            // Click on date fields to open the datepicker
+            await user.click(dateOfBirth);
+            await user.click(startDate);
 
-    beforeEach(() => {
-        testStore = createTestStore();
-        renderAddEmployeesPage(testStore);
-    });
-
-    it("should navigate user to the EmployeesListPage route", async() => {
-        const user = userEvent.setup();
-
-        const link = screen.getByRole("link", {name: /View Current Employees/i});
-
-        await user.click(link);
-
-        // Check if the EmployeesListPage is rendered
-        await waitFor(() => {
-            expect(screen.getByText(/View Current Employees/i)).toBeInTheDocument();
+            // Check if the datepicker is rendered
+            expect(document.querySelector("#calendar")).toBeInTheDocument();
         });
     });
-});
 
-describe("form submission", () => {
-    let testStore;
+    describe("Navigate link", () => {
+        let testStore;
 
-    beforeEach(() => {
-        testStore = createTestStore();
-        renderAddEmployeesPage(testStore, '/');
-        localStorage.clear();
-    });
-
-    it("should submit the form with valid data and add employee to Redux store", async () => {
-        const user = userEvent.setup();
-
-        // Fill out the form
-        await user.type(screen.getByLabelText("First Name"), "John");
-        await user.type(screen.getByLabelText("Last Name"), "Doe");
-
-        const dobField = screen.getByLabelText("Date of Birth");
-        await user.clear(dobField);
-        await user.type(dobField, "01/01/1990");
-        
-        const startDateField = screen.getByLabelText("Start Date");
-        await user.clear(startDateField);
-        await user.type(startDateField, "01/01/2020");
-        
-        await user.selectOptions(screen.getByLabelText("Department"), "Sales");
-        await user.type(screen.getByLabelText("Street"), "123 Main St");
-        
-        await user.type(screen.getByLabelText("City"), "New York");
-        await user.selectOptions(screen.getByLabelText("State"), "NY");
-        
-        await user.type(screen.getByLabelText("Zip Code"), "10001");
-
-        // Submit the form
-        await user.click(screen.getByRole("button", { name: /save/i }));
-
-        // Wait for modal to appear
-        const modal = await screen.findByRole("dialog", {}, { timeout: 1000 });
-        expect(modal).toBeInTheDocument();
-
-        // Check Redux store
-        const employees = testStore.getState().employees.employee;
-        console.log("Employees in Redux store:", employees);
-
-        expect(employees).toHaveLength(1);
-
-        const addedEmployee = employees[0];
-        expect(addedEmployee).toMatchObject({
-            firstName: "John",
-            lastName: "Doe",
-            dateOfBirth: "1990-01-01",
-            startDate: "2020-01-01",
-            street: "123 Main St",
-            city: "New York",
-            state: "NY",
-            zipCode: "10001",
-            department: "Sales"
+        beforeEach(() => {
+            testStore = createTestStore();
+            renderAddEmployeesPage(testStore);
         });
-    }, 10000); // Increase timeout for async operations
 
-    it("should handle form validation errors", async () => {
-        const user = userEvent.setup();
+        it("should navigate user to the EmployeesListPage route", async() => {
+            const user = userEvent.setup();
 
-        // Verify we're on the correct page first
-        expect(screen.getByText(/Create Employee/i)).toBeInTheDocument();
-        expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
+            const link = screen.getByRole("link", {name: /View Current Employees/i});
 
-        // Only fill partial form (missing required fields)
-        await user.type(screen.getByLabelText(/First Name/i), 'John');
-        // Leave other required fields empty
+            await user.click(link);
 
-        const saveButton = screen.getByRole("button", { name: /Save/i });
-        await user.click(saveButton);
-
-        // Should not show success modal
-        expect(screen.queryByText(/Employee sucessfully created/i)).not.toBeInTheDocument();
-        
-        // Should not add to Redux store
-        expect(testStore.getState().employees.employee).toHaveLength(0);
-        
-        // Should not add to localStorage
-        const localStorageData = localStorage.getItem("employeeList");
-        expect(localStorageData).toBeNull();
-    });
-
-    it("should check form validation state", async () => {
-        const user = userEvent.setup();
-
-        const form = document.querySelector('form');
-        expect(form).toBeInTheDocument();
-
-        // Fill out the form with invalid data
-        const saveButton = screen.getByRole("button", { name: /Save/i });
-        await user.click(saveButton);
-        
-        // Verify form is marked as invalid
-        expect(form).toHaveAttribute('novalidate');
-    });
-
-    it("should navigate to EmployeesListPage after closing success modal", async() => {
-        const user = userEvent.setup();
-
-        // Fill out the form with valid data
-        await user.type(screen.getByLabelText("First Name"), "John");
-        await user.type(screen.getByLabelText("Last Name"), "Doe");
-
-        const dobField = screen.getByLabelText("Date of Birth");
-        await user.clear(dobField);
-        await user.type(dobField, "01/01/1990");
-        
-        const startDateField = screen.getByLabelText("Start Date");
-        await user.clear(startDateField);
-        await user.type(startDateField, "01/01/2020");
-        
-        await user.selectOptions(screen.getByLabelText("Department"), "Sales");
-        await user.type(screen.getByLabelText("Street"), "123 Main St");
-        
-        await user.type(screen.getByLabelText("City"), "New York");
-        await user.selectOptions(screen.getByLabelText("State"), "NY");
-        
-        await user.type(screen.getByLabelText("Zip Code"), "10001");
-        
-        await user.click(screen.getByRole("button", { name: /save/i }));
-
-        // Wait for success modal to appear
-        const modal = await screen.findByRole("dialog");
-        expect(modal).toBeInTheDocument();
-
-        // Click the Close button in the modal
-        const closeButton = screen.getByText(/Close/i);
-        expect(closeButton).toBeInTheDocument();
-
-        await user.click(closeButton);
-
-        // Check if navigated to EmployeesListPage
-        await waitFor(() => {
-            expect()
-            expect(screen.getByText(/View Current Employees/i)).toBeInTheDocument();
+            // Check if the EmployeesListPage is rendered
+            await waitFor(() => {
+                expect(screen.getByText(/View Current Employees/i)).toBeInTheDocument();
+            });
         });
     });
+
+    describe("form submission", () => {
+        let testStore;
+
+        beforeEach(() => {
+            testStore = createTestStore();
+            renderAddEmployeesPage(testStore, '/');
+            localStorage.clear();
+        });
+
+        it("should submit the form with valid data and add employee to Redux store", async () => {
+            const user = userEvent.setup();
+
+            // Fill out the form
+            await user.type(screen.getByLabelText("First Name"), "John");
+            await user.type(screen.getByLabelText("Last Name"), "Doe");
+
+            const dobField = screen.getByLabelText("Date of Birth");
+            await user.clear(dobField);
+            await user.type(dobField, "01/01/1990");
+            
+            const startDateField = screen.getByLabelText("Start Date");
+            await user.clear(startDateField);
+            await user.type(startDateField, "01/01/2020");
+            
+            await user.selectOptions(screen.getByLabelText("Department"), "Sales");
+            await user.type(screen.getByLabelText("Street"), "123 Main St");
+            
+            await user.type(screen.getByLabelText("City"), "New York");
+            await user.selectOptions(screen.getByLabelText("State"), "NY");
+            
+            await user.type(screen.getByLabelText("Zip Code"), "10001");
+
+            // Submit the form
+            await user.click(screen.getByRole("button", { name: /save/i }));
+
+            // Wait for modal to appear
+            const modal = await screen.findByRole("dialog", {}, { timeout: 1000 });
+            expect(modal).toBeInTheDocument();
+
+            // Check Redux store
+            const employees = testStore.getState().employees.employee;
+            console.log("Employees in Redux store:", employees);
+
+            expect(employees).toHaveLength(1);
+
+            const addedEmployee = employees[0];
+            expect(addedEmployee).toMatchObject({
+                firstName: "John",
+                lastName: "Doe",
+                dateOfBirth: "1990-01-01",
+                startDate: "2020-01-01",
+                street: "123 Main St",
+                city: "New York",
+                state: "NY",
+                zipCode: "10001",
+                department: "Sales"
+            });
+        });
+
+        it("should handle form validation errors", async () => {
+            const user = userEvent.setup();
+
+            // Verify we're on the correct page first
+            expect(screen.getByText(/Create Employee/i)).toBeInTheDocument();
+            expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
+
+            // Only fill partial form (missing required fields)
+            await user.type(screen.getByLabelText(/First Name/i), 'John');
+            // Leave other required fields empty
+
+            const saveButton = screen.getByRole("button", { name: /Save/i });
+            await user.click(saveButton);
+
+            // Should not show success modal
+            expect(screen.queryByText(/Employee sucessfully created/i)).not.toBeInTheDocument();
+            
+            // Should not add to Redux store
+            expect(testStore.getState().employees.employee).toHaveLength(0);
+            
+            // Should not add to localStorage
+            const localStorageData = localStorage.getItem("employeeList");
+            expect(localStorageData).toBeNull();
+        });
+
+        it("should check form validation state", async () => {
+            const user = userEvent.setup();
+
+            const form = document.querySelector('form');
+            expect(form).toBeInTheDocument();
+
+            // Fill out the form with invalid data
+            const saveButton = screen.getByRole("button", { name: /Save/i });
+            await user.click(saveButton);
+            
+            // Verify form is marked as invalid
+            expect(form).toHaveAttribute('novalidate');
+        });
+
+        it("should navigate to EmployeesListPage after closing success modal", async() => {
+            const user = userEvent.setup();
+
+            // Fill out the form with valid data
+            await user.type(screen.getByLabelText("First Name"), "John");
+            await user.type(screen.getByLabelText("Last Name"), "Doe");
+
+            const dobField = screen.getByLabelText("Date of Birth");
+            await user.clear(dobField);
+            await user.type(dobField, "01/01/1990");
+            
+            const startDateField = screen.getByLabelText("Start Date");
+            await user.clear(startDateField);
+            await user.type(startDateField, "01/01/2020");
+            
+            await user.selectOptions(screen.getByLabelText("Department"), "Sales");
+            await user.type(screen.getByLabelText("Street"), "123 Main St");
+            
+            await user.type(screen.getByLabelText("City"), "New York");
+            await user.selectOptions(screen.getByLabelText("State"), "NY");
+            
+            await user.type(screen.getByLabelText("Zip Code"), "10001");
+            
+            await user.click(screen.getByRole("button", { name: /save/i }));
+
+            // Wait for success modal to appear
+            const modal = await screen.findByRole("dialog");
+            expect(modal).toBeInTheDocument();
+
+            // Click the Close button in the modal
+            const closeButton = screen.getByText(/Close/i);
+            expect(closeButton).toBeInTheDocument();
+
+            await user.click(closeButton);
+
+            // Check if navigated to EmployeesListPage
+            await waitFor(() => {
+                expect(screen.getByText(/View Current Employees/i)).toBeInTheDocument();
+            });
+        });
+    }, 10000);
 });
