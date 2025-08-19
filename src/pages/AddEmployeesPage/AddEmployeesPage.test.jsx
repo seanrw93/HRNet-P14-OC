@@ -8,7 +8,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import employeeReducer from '../../store/employeeSlice';
 import AddEmployeesPage from './AddEmployeesPage';
 import EmployeesListPage from '../EmployeesListPage/EmployeesListPage';
-import Layout from '../../components/Layout/Layout';
+import Layout from '../../components/templates/Layout/Layout';
 
 import { states } from '../../data/states';
 import { departments } from '../../data/departments';
