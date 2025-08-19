@@ -73,6 +73,16 @@ const AddEmployeesPage = () => {
     navigate("/employees-list");
   };
 
+  const invalidDateFeedback = (fieldName, fieldAria, fieldLabel) => {
+    if (!validated || employee[fieldName]) return null;
+    
+    return (
+      <div className="invalid-feedback d-block" id={`formGroup${fieldAria}Help`}>
+        Please provide a {fieldLabel}.
+      </div>
+    );
+  };
+
   return (
     <Container fluid className="my-4">
       <Row>
@@ -136,9 +146,7 @@ const AddEmployeesPage = () => {
                   describedBy: "formGroupDOBHelp",
                 }}
               />
-              <Form.Control.Feedback type="invalid" id="formGroupDOBHelp">
-                Please provide a date of birth.
-              </Form.Control.Feedback>
+              {invalidDateFeedback("dateOfBirth", "DOB", "date of birth")}
             </Form.Group>
             <Form.Group className="mb-3" controlId="formGroupStartDate">
               <Form.Label className="mb-2">Start Date</Form.Label>
@@ -157,9 +165,7 @@ const AddEmployeesPage = () => {
                   describedBy: "formGroupStartDateHelp",
                 }}
               />
-              <Form.Control.Feedback type="invalid" id="formGroupStartDateHelp">
-                Please provide a start date.
-              </Form.Control.Feedback>
+              {invalidDateFeedback("startDate", "StartDate", "start date")}
             </Form.Group>
             <fieldset className="address border rounded p-3 mb-3">
               <legend className="float-none w-auto px-2">Address</legend>
