@@ -1,8 +1,8 @@
 import { memo } from "react";
 import Table from "react-bootstrap/Table";
-import EmployeeDataTableRow from "./EmployeeDataTableRow";
-import { reformatCamelCase } from "../utils/reformatCamelCase";
-import SortButtons from "./SortButtons";
+import EmployeeDataTableRow from "../EmployeeDataTableRow/EmployeeDataTableRow";
+import { reformatCamelCase } from "../../utils/reformatCamelCase";
+import SortButtons from "../SortButtons/SortButtons";
 
 const EmployeeTable = ({
   keys,

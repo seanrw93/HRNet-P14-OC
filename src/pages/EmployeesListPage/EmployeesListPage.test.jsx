@@ -8,7 +8,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import employeeReducer from '../../store/employeeSlice';
 import AddEmployeesPage from '../AddEmployeesPage/AddEmployeesPage';
 import EmployeesListPage from '../EmployeesListPage/EmployeesListPage';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layout/Layout';
 
 import { beforeEach, afterEach, expect, describe, it } from 'vitest';
 

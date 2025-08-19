@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
 
-import { reformatCamelCase } from '../utils/reformatCamelCase';
+import { reformatCamelCase } from '../../utils/reformatCamelCase';
 
 const EmployeeDataTableRow = ({ 
     employee, 
