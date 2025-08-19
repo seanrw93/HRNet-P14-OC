@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
+import Layout from './components/templates/Layout/Layout'
 import AddEmployeesPage from './pages/AddEmployeesPage/AddEmployeesPage'
 import EmployeesListPage from './pages/EmployeesListPage/EmployeesListPage'
 import NotFound from './pages/NotFound/NotFound'

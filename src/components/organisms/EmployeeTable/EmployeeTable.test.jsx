@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import EmployeeTable from './EmployeeTable';
 import { beforeEach, afterEach, expect, describe, it, vi } from 'vitest';
-import { reformatCamelCase } from '../../utils/reformatCamelCase';
+import { reformatCamelCase } from '../../../utils/reformatCamelCase';
 
 describe('EmployeeTable', () => {
 

@@ -10,9 +10,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Alert from "react-bootstrap/Alert";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/atoms/Loader/Loader";
 
-const EmployeeTable = lazy(() => import("../../components/EmployeeTable/EmployeeTable"));
+const EmployeeTable = lazy(() => import("../../components/organisms/EmployeeTable/EmployeeTable"));
 
 const EmployeesListPage = () => {
   const dispatch = useDispatch();
