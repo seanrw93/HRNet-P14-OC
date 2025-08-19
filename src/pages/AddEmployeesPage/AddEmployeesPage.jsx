@@ -14,8 +14,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+
 import SelectInput from "../../components/atoms/SelectInput/SelectInput";
+import SuccessModal from "../../components/molecules/SuccessModal/SuccessModal";
 
 const AddEmployeesPage = () => {
   const navigate = useNavigate();
@@ -244,19 +245,14 @@ const AddEmployeesPage = () => {
               Save
             </Button>
           </Form>
-          <Modal show={showModal} onHide={closeModal} className="mt-3">
-            <Modal.Header className="bg-secondary text-white" closeButton>
-              Alert
-            </Modal.Header>
-            <Modal.Body>
-              <p>Employee sucessfully created</p>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button onClick={closeModal} variant="primary">
-                Close
-              </Button>
-            </Modal.Footer>
-          </Modal>
+          <SuccessModal
+            show={showModal}
+            onHide={() => setShowModal(false)}
+            onConfirm={closeModal}
+            title="Success"
+            message="Employee successfully created"
+            buttonText="See employees"
+          />
         </Col>
       </Row>
     </Container>

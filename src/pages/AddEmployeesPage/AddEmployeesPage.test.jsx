@@ -271,7 +271,7 @@ describe('AddEmployeesPage', () => {
             expect(modal).toBeInTheDocument();
 
             // Click the Close button in the modal
-            const closeButton = screen.getByText(/Close/i);
+            const closeButton = screen.getByText(/see employees/i);
             expect(closeButton).toBeInTheDocument();
 
             await user.click(closeButton);
