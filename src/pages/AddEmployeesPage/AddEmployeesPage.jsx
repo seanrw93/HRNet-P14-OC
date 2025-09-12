@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { addEmployee } from "../../store/employeeSlice";
 import { states } from "../../data/states";
 import { departments } from "../../data/departments";
-import { convertToISO } from "../../utils/convertToIso";
+import { convertToISO } from "../../utils/convertToISO";
 
 import DatePicker from "react-i18n-datepicker";
 import "react-i18n-datepicker/dist/react-i18n-datepicker.css";
@@ -34,7 +34,7 @@ const AddEmployeesPage = () => {
     department: ""
   })
   const [validated, setValidated] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = usùeState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFormInput = (e) => {
