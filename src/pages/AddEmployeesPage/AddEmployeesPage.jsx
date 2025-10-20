@@ -34,7 +34,7 @@ const AddEmployeesPage = () => {
     department: ""
   })
   const [validated, setValidated] = useState(false);
-  const [showModal, setShowModal] = usùeState(false);
+  const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFormInput = (e) => {
