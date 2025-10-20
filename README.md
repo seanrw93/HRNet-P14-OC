@@ -2,6 +2,8 @@
 
 This project is a React-based conversion of the original [HRnet jQuery library](https://github.com/OpenClassrooms-Student-Center/P12_Front-end). It leverages [Vite](https://vitejs.dev/) for fast development and build tooling.
 
+See live version [here](https://hrnet-srw.vercel.app/)
+
 ## Features
 
 ### jQuery to React Conversion Highlights
